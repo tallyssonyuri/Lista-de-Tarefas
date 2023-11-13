@@ -193,3 +193,218 @@ int alterarTarefas(ListaDeTarefas *lt){
   printf("\nTarefa alterada!\n\n\n");
   return 0;
 }
+
+/*---------------------------------*/
+
+void filtrarTarefas(ListaDeTarefas lt){
+  /* Imprime as opções de filtro para o usuário. */
+  printf("Escolha o tipo de filtro:\n\n");
+  printf("1. Filtrar tarefas por prioridade\n");
+  printf("2. Filtrar tarefas por estado\n");
+  printf("3. Filtrar tarefas por categoria\n");
+  printf("4. Filtrar tarefas por prioridade e categoria\n\n");
+
+  /* Lê a opção de filtro escolhida pelo usuário. */
+  int opcao;
+  scanf("%d", &opcao);
+  printf("\n");
+  int c;
+  while ((c = getchar()) != '\n' && c != EOF);
+
+  /* Executa a função de filtro correspondente à opção escolhida pelo usuário. */
+  switch(opcao) {
+    case 1:
+      /* Filtra tarefas por prioridade. */
+      filtrarTarefasPorPrioridade(lt);
+      break;
+    case 2:
+      /** Filtra tarefas por estado. */
+      filtrarTarefasPorEstado(lt);
+      break;
+    case 3:
+      /* Filtra tarefas por categoria. */
+      filtrarTarefasPorCategoria(lt);
+      break;
+    case 4:
+      /* Filtra tarefas por prioridade e categoria. */
+      filtrarTarefasPorPrioridadeECategoria(lt);
+      break;
+    default:
+      /* Imprime uma mensagem de erro se o usuário escolher uma opção inválida. */
+      printf("Opção inválida!\n\n");
+  }
+}
+
+int filtrarTarefasPorPrioridade(ListaDeTarefas lt){ /* Função para filtrar tarefas por prioridade em uma lista de tarefas. */
+  /* Verifica se a lista de tarefas está vazia. */
+  if(lt.qtd == 0) {
+    printf("\nNão há tarefas para listar.\n\n");
+    return 1;
+  }
+
+  /* Solicita ao usuário que insira a prioridade das tarefas a serem listadas. */
+  int prioridade;
+  printf("\nDigite a prioridade das tarefas a serem listadas: ");
+  scanf("%d", &prioridade);
+  while ((getchar()) != '\n');
+
+  /* Variável para verificar se uma tarefa com a prioridade especificada foi encontrada. */
+  int encontrou = 0;
+  printf("\n\nTarefas com prioridade %d:\n\n", prioridade);
+
+  /* Percorre a lista de tarefas. */
+  for(int i = 0; i < lt.qtd; i++) {
+    /* Verifica se a tarefa atual tem a prioridade especificada. */
+    if(lt.tarefas[i].prioridade == prioridade) {
+      /* Imprime os detalhes da tarefa. */
+      printf("Tarefa %d\n", i);
+      printf("Descricao: %s\n", lt.tarefas[i].descricao);
+      printf("Prioridade: %d\n", lt.tarefas[i].prioridade);   
+      printf("Categoria: %s\n", lt.tarefas[i].categoria);
+      printf("Estado: %d\n", lt.tarefas[i].estado);
+      printf("\n");
+      encontrou = 1;
+    }
+  }
+
+  /* Se nenhuma tarefa com a prioridade especificada foi encontrada, imprime uma mensagem. */
+  if(!encontrou) {
+    printf("\nNão há tarefas com a prioridade %d.\n\n", prioridade);
+  }
+
+  return 0;
+}
+
+int filtrarTarefasPorEstado(ListaDeTarefas lt){ /* Função para filtrar tarefas por estado em uma lista de tarefas. */
+  /* Verifica se a lista de tarefas está vazia. */
+  if(lt.qtd == 0) {
+    printf("Não há tarefas para listar.\n\n");
+    return 1;
+  }
+
+  /* Solicita ao usuário que insira o estado das tarefas a serem listadas. */
+  int estado;
+  printf("\nDigite o estado das tarefas a serem listadas (0 para completo, 1 para em andamento, 2 para não iniciado): ");
+  scanf("%d", &estado);
+  while ((getchar()) != '\n');
+
+  /* Verifica se o estado inserido pelo usuário é válido. */
+  if(estado < 0 || estado > 2) {
+    printf("\nEstado inválido.\n\n");
+    return 1;
+  }
+
+  /* Variável para verificar se uma tarefa com o estado especificado foi encontrada. */
+  int encontrou = 0;
+  printf("\n\nTarefas com estado %d:\n\n", estado);
+
+  /* Percorre a lista de tarefas. */
+  for(int i = 0; i < lt.qtd; i++) {
+    /* Verifica se a tarefa atual tem o estado especificado. */
+    if(lt.tarefas[i].estado == estado) {
+      /* Imprime os detalhes da tarefa. */
+      printf("Tarefa %d\n", i);
+      printf("Descricao: %s\n", lt.tarefas[i].descricao);
+      printf("Prioridade: %d\n", lt.tarefas[i].prioridade);   
+      printf("Categoria: %s\n", lt.tarefas[i].categoria);
+      printf("Estado: %d\n", lt.tarefas[i].estado);
+      printf("\n");
+      encontrou = 1;
+    }
+  }
+
+  /* Se nenhuma tarefa com o estado especificado foi encontrada, imprime uma mensagem. */
+  if (!encontrou){
+    printf("\nNão há tarefas com o estado %d\n\n", estado);
+  }
+
+  return 0;
+}
+
+int filtrarTarefasPorCategoria(ListaDeTarefas lt){ /* Função para filtrar tarefas por categoria em uma lista de tarefas. */
+  /* Verifica se a lista de tarefas está vazia. */
+  if(lt.qtd == 0) {
+    printf("Não há tarefas para listar.\n\n");
+    return 1;
+  }
+
+  /* Solicita ao usuário que insira a categoria das tarefas a serem listadas. */
+  char categoria[100];
+  printf("\nDigite a categoria das tarefas a serem listadas: ");
+  fgets(categoria, 100, stdin);
+  categoria[strcspn(categoria, "\n")] = 0;
+  while ((getchar()) != '\n');
+
+  /* Variável para verificar se uma tarefa com a categoria especificada foi encontrada. */
+  int encontrou = 0;
+  printf("\n\nTarefas na categoria %s:\n\n", categoria);
+
+  /* Percorre a lista de tarefas. */
+  for(int i = 0; i < lt.qtd; i++) {
+    /* Verifica se a tarefa atual tem a categoria especificada. */
+    if(strcmp(lt.tarefas[i].categoria, categoria) == 0) {
+      /* Imprime os detalhes da tarefa. */
+      printf("Tarefa %d\n", i);
+      printf("Descricao: %s\n", lt.tarefas[i].descricao);
+      printf("Prioridade: %d\n", lt.tarefas[i].prioridade);   
+      printf("Categoria: %s\n", lt.tarefas[i].categoria);
+      printf("Estado: %d\n", lt.tarefas[i].estado);
+      printf("\n");
+      encontrou = 1;
+    }
+  }
+
+  /* Se nenhuma tarefa com a categoria especificada foi encontrada, imprime uma mensagem. */
+  if (!encontrou){
+    printf("\nNão há tarefas com a categoria informada\n\n");
+  }
+
+  return 0;
+}
+
+int filtrarTarefasPorPrioridadeECategoria(ListaDeTarefas lt){ /* Função para filtrar tarefas por prioridade e categoria em uma lista de tarefas. */
+  
+  if(lt.qtd == 0) { /* Verifica se a lista de tarefas está vazia. */
+    printf("Não há tarefas para listar.\n\n");
+    return 1;
+  }
+
+  /* Solicita ao usuário que insira a prioridade das tarefas a serem listadas. */
+  int prioridade;
+  printf("\nDigite a prioridade das tarefas a serem listadas: ");
+  scanf("%d", &prioridade);
+  while ((getchar()) != '\n');
+
+  /* Solicita ao usuário que insira a categoria das tarefas a serem listadas. */
+  char categoria[100];
+  printf("\n\nDigite a categoria das tarefas a serem listadas: ");
+  fgets(categoria, 100, stdin);
+  categoria[strcspn(categoria, "\n")] = 0;
+  while ((getchar()) != '\n');
+
+  /* Variável para verificar se uma tarefa com a prioridade e categoria especificadas foi encontrada. */
+  int encontrou = 0;
+  printf("\nTarefas com prioridade %d na categoria %s:\n\n", prioridade, categoria);
+
+  /* Percorre a lista de tarefas. */
+  for(int i = 0; i < lt.qtd; i++) {
+    /* Verifica se a tarefa atual tem a prioridade e categoria especificadas. */
+    if(lt.tarefas[i].prioridade == prioridade && strcmp(lt.tarefas[i].categoria, categoria) == 0) {
+      /* Imprime os detalhes da tarefa. */
+      printf("Tarefa %d\n", i);
+      printf("Descricao: %s\n", lt.tarefas[i].descricao);
+      printf("Prioridade: %d\n", lt.tarefas[i].prioridade);   
+      printf("Categoria: %s\n", lt.tarefas[i].categoria);
+      printf("Estado: %d\n", lt.tarefas[i].estado);
+      printf("\n");
+      encontrou = 1;
+    }
+  }
+
+  /* Se nenhuma tarefa com a prioridade e categoria especificadas foi encontrada, imprime uma mensagem. */
+  if (!encontrou){
+    printf("\nNão há tarefas com a prioridade e categoria selecionadas\n\n");
+  }
+
+  return 0;
+}
