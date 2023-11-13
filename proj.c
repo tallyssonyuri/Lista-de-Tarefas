@@ -408,3 +408,210 @@ int filtrarTarefasPorPrioridadeECategoria(ListaDeTarefas lt){ /* Função para f
 
   return 0;
 }
+
+/*---------------------------------*/
+
+/* Função para exportar tarefas em uma lista de tarefas. */
+void exportarTarefas(ListaDeTarefas lt){
+  /* Imprime as opções de exportação para o usuário. */
+  printf("Escolha o tipo de exportação:\n");
+  printf("1. Exportar tarefas por prioridade\n");
+  printf("2. Exportar tarefas por categoria\n");
+  printf("3. Exportar tarefas por prioridade e categoria\n");
+
+  /* Lê a opção de exportação escolhida pelo usuário. */
+  int opcao;
+  scanf("%d", &opcao);
+  printf("\n");
+  int c;
+  while ((c = getchar()) != '\n' && c != EOF);
+
+  /* Executa a função de exportação correspondente à opção escolhida pelo usuário. */
+  switch(opcao) {
+    case 1:
+      /* Exporta tarefas por prioridade. */
+      exportarTarefasPorPrioridade(lt);
+      break;
+    case 2:
+      /* Exporta tarefas por categoria. */
+      exportarTarefasPorCategoria(lt);
+      break;
+    case 3:
+      /* Exporta tarefas por prioridade e categoria. */
+      exportarTarefasPorPrioridadeECategoria(lt);
+      break;
+    default:
+      /* Imprime uma mensagem de erro se o usuário escolher uma opção inválida. */
+      printf("Opção inválida!\n\n");
+  }
+}
+
+/* Função para exportar tarefas por prioridade em uma lista de tarefas. */
+int exportarTarefasPorPrioridade(ListaDeTarefas lt){
+  /* Verifica se a lista de tarefas está vazia. */
+  if(lt.qtd == 0) {
+    printf("Não há tarefas para exportar.\n\n");
+    return 1;
+  }
+
+  /* Solicita ao usuário que insira a prioridade das tarefas a serem exportadas. */
+  int prioridade;
+  printf("Digite a prioridade das tarefas a serem exportadas: ");
+  scanf("%d", &prioridade);
+  while ((getchar()) != '\n');
+
+  /* Abre o arquivo para escrita. */
+  FILE *fp = fopen("tarefas_por_prioridade.txt", "w");
+  /* Verifica se o arquivo foi aberto com sucesso. */
+  if(fp == NULL) {
+    printf("Não foi possível abrir o arquivo para escrita.\n");
+    return 1;
+  }
+
+  /* Variável para verificar se uma tarefa com a prioridade especificada foi encontrada. */
+  int encontrou = 0;
+  /* Escreve no arquivo as tarefas com a prioridade especificada. */
+  fprintf(fp, "Tarefas com prioridade %d:\n\n", prioridade);
+  /* Percorre a lista de tarefas. */
+  for(int i = 0; i < lt.qtd; i++) {
+    /* Verifica se a tarefa atual tem a prioridade especificada. */
+    if(lt.tarefas[i].prioridade == prioridade) {
+      /* Escreve os detalhes da tarefa no arquivo. */
+      fprintf(fp, "Tarefa %d\n", i);
+      fprintf(fp, "Descricao: %s\n", lt.tarefas[i].descricao);
+      fprintf(fp, "Prioridade: %d\n", lt.tarefas[i].prioridade);   
+      fprintf(fp, "Categoria: %s\n", lt.tarefas[i].categoria);
+      fprintf(fp, "Estado: %d\n", lt.tarefas[i].estado);
+      fprintf(fp, "\n");
+      encontrou = 1;
+    }
+  }
+
+  /* Se nenhuma tarefa com a prioridade especificada foi encontrada, imprime uma mensagem. */
+  if (!encontrou){
+    printf("\nNão há tarefas com a prioridade %d\n\n", prioridade);
+  }
+  /* Fecha o arquivo. */
+  fclose(fp);
+
+  /* Informa ao usuário que as tarefas foram exportadas. */
+  printf("\nTarefas exportadas para o arquivo tarefas_por_prioridade.txt!\n\n\n");
+  return 0;
+}
+
+/* Função para exportar tarefas por categoria em uma lista de tarefas. */
+int exportarTarefasPorCategoria(ListaDeTarefas lt){
+  /* Verifica se a lista de tarefas está vazia. */
+  if(lt.qtd == 0) {
+    printf("Não há tarefas para exportar.\n\n");
+    return 1;
+  }
+
+  /* Solicita ao usuário que insira a categoria das tarefas a serem exportadas. */
+  char categoria[100];
+  printf("Digite a categoria das tarefas a serem exportadas: ");
+  fgets(categoria, 100, stdin);
+  categoria[strcspn(categoria, "\n")] = 0;
+  while ((getchar()) != '\n');
+
+  /* Abre o arquivo para escrita. */
+  FILE *fp = fopen("tarefas_por_categoria.txt", "w");
+  /* Verifica se o arquivo foi aberto com sucesso. */
+  if(fp == NULL) {
+    printf("Não foi possível abrir o arquivo para escrita.\n");
+    return 1;
+  }
+
+  /* Variável para verificar se uma tarefa com a categoria especificada foi encontrada. */
+  int encontrou = 0;
+  /* Escreve no arquivo as tarefas com a categoria especificada. */
+  fprintf(fp, "Tarefas na categoria %s:\n\n", categoria);
+  /* Percorre a lista de tarefas. */
+  for(int i = 0; i < lt.qtd; i++) {
+    /* Verifica se a tarefa atual tem a categoria especificada. */
+    if(strcmp(lt.tarefas[i].categoria, categoria) == 0) {
+      /* Escreve os detalhes da tarefa no arquivo. */
+      fprintf(fp, "Tarefa %d\n", i);
+      fprintf(fp, "Descricao: %s\n", lt.tarefas[i].descricao);
+      fprintf(fp, "Prioridade: %d\n", lt.tarefas[i].prioridade);   
+      fprintf(fp, "Categoria: %s\n", lt.tarefas[i].categoria);
+      fprintf(fp, "Estado: %d\n", lt.tarefas[i].estado);
+      fprintf(fp, "\n");
+      encontrou = 1;
+    }
+  }
+
+  /* Fecha o arquivo. */
+  fclose(fp);
+
+  /* Se nenhuma tarefa com a categoria especificada foi encontrada, imprime uma mensagem. */
+  if (!encontrou){
+    printf("\nNão há tarefas com a categoria informada\n\n");
+  }
+
+  /* Informa ao usuário que as tarefas foram exportadas. */
+  printf("\nTarefas exportadas para o arquivo tarefas_por_categoria.txt!\n\n\n");
+  return 0;
+}
+
+/* Função para exportar tarefas por prioridade e categoria em uma lista de tarefas. */
+int exportarTarefasPorPrioridadeECategoria(ListaDeTarefas lt){
+  /* Verifica se a lista de tarefas está vazia. */
+  if(lt.qtd == 0) {
+    printf("Não há tarefas para exportar.\n\n");
+    return 1;
+  }
+
+  /* Solicita ao usuário que insira a prioridade das tarefas a serem exportadas. */
+  int prioridade;
+  printf("Digite a prioridade das tarefas a serem exportadas: ");
+  scanf("%d", &prioridade);
+  while ((getchar()) != '\n');
+
+  /* Solicita ao usuário que insira a categoria das tarefas a serem exportadas. */
+  char categoria[100];
+  printf("Digite a categoria das tarefas a serem exportadas: ");
+  fgets(categoria, 100, stdin);
+  categoria[strcspn(categoria, "\n")] = 0;
+  while ((getchar()) != '\n');
+
+  /* Abre o arquivo para escrita. */
+  FILE *fp = fopen("tarefas_por_prioridade_e_categoria.txt", "w");
+  /* Verifica se o arquivo foi aberto com sucesso. */
+  if(fp == NULL) {
+    printf("Não foi possível abrir o arquivo para escrita.\n");
+    return 1;
+  }
+
+  /* Variável para verificar se uma tarefa com a prioridade e categoria especificadas foi encontrada. */
+  int encontrou = 0;
+  /* Escreve no arquivo as tarefas com a prioridade e categoria especificadas. */
+  fprintf(fp, "Tarefas com prioridade %d na categoria %s:\n\n", prioridade, categoria);
+  /* Percorre a lista de tarefas. */
+  for(int i = 0; i < lt.qtd; i++) {
+    /* Verifica se a tarefa atual tem a prioridade e categoria especificadas. */
+    if(lt.tarefas[i].prioridade == prioridade && strcmp(lt.tarefas[i].categoria, categoria) == 0) {
+      /* Escreve os detalhes da tarefa no arquivo. */
+      fprintf(fp, "Tarefa %d\n", i);
+      fprintf(fp, "Descricao: %s\n", lt.tarefas[i].descricao);
+      fprintf(fp, "Prioridade: %d\n", lt.tarefas[i].prioridade);   
+      fprintf(fp, "Categoria: %s\n", lt.tarefas[i].categoria);
+      fprintf(fp, "Estado: %d\n", lt.tarefas[i].estado);
+      fprintf(fp, "\n");
+      encontrou = 1;
+    }
+  }
+
+  /* Fecha o arquivo. */
+  fclose(fp);
+
+  /* Se nenhuma tarefa com a prioridade e categoria especificadas foi encontrada, imprime uma mensagem. */
+  if (!encontrou){
+    printf("\nNão há tarefas com a categoria e prioridades informadas\n\n");
+  }
+
+  /* Informa ao usuário que as tarefas foram exportadas. */
+  printf("\nTarefas exportadas para o arquivo tarefas_por_prioridade_e_categoria.txt!\n\n\n");
+
+  return 0;
+}
