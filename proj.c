@@ -8,23 +8,36 @@ int cadastrarTarefas(ListaDeTarefas *lt){ /* Função para cadastrar uma tarefa.
     printf("A lista de tarefas está cheia.\n\n\n");
     return 1;
   }
-  
+
   printf("Digite a descricao da tarefa: ");
   fgets(lt->tarefas[lt->qtd].descricao, 300, stdin); /* Leitura da descricao informada pelo usuario para ser adicionada no struct informado */
   lt->tarefas[lt->qtd].descricao[strcspn(lt->tarefas[lt->qtd].descricao, "\n")] = 0; /* Remove o caractere de nova linha do final da descrição. Assim não irá atrapalhar na execução do próximo item */
   while ((getchar()) != '\n'); /* Limpa o buffer de entrada. */
-/* O código abaixo possui a mesa lógica dos comentarios acima */
-  printf("Digite a prioridade da tarefa (Sugerimos definir valores de 0-10): ");
+
+  printf("Digite a prioridade da tarefa (Sugerimos definir valores de 0-10): "); /*Leitura da prioridade da tarefa*/
   scanf("%d", &lt->tarefas[lt->qtd].prioridade);
   while ((getchar()) != '\n'); 
-  
-  printf("Digite a categoria da tarefa: ");
+
+  printf("Digite a categoria da tarefa: "); /* Leitura da categoria da tarefa*/
   fgets(lt->tarefas[lt->qtd].categoria, 100, stdin);
   lt->tarefas[lt->qtd].categoria[strcspn(lt->tarefas[lt->qtd].categoria, "\n")] = 0;
-    while ((getchar()) != '\n');
-  
+  while ((getchar()) != '\n');
+
+  printf("Digite o estado da tarefa (0 para completo, 1 para em andamento, 2 para não iniciado): "); /*Leitura do estado da tarefa */
+  int estado;
+  scanf("%d", &estado);
+  lt->tarefas[lt->qtd].estado = estado;
+  if (estado == 0) {
+    strcpy(lt->tarefas[lt->qtd].estadoStr, "Completo");
+  } else if (estado == 1) {
+    strcpy(lt->tarefas[lt->qtd].estadoStr, "Em andamento");
+  } else if (estado == 2) {
+    strcpy(lt->tarefas[lt->qtd].estadoStr, "Não iniciado");
+  }
+  while ((getchar()) != '\n');
+
   lt->qtd++; /* Incrementa a quantidade de tarefas na lista. */
-  
+
   printf("\nTarefa cadastrada!\n\n\n");
   return 0;
 }
@@ -65,6 +78,7 @@ int listarTarefas(ListaDeTarefas lt){ /* Função para listar as tarefas. Recebe
     printf("Descricao: %s\n", lt.tarefas[i].descricao);
     printf("Prioridade: %d\n", lt.tarefas[i].prioridade);   
     printf("Categoria: %s\n", lt.tarefas[i].categoria);
+    printf("Estado: %s\n", lt.tarefas[i].estadoStr);
     printf("\n");
   }
 
@@ -105,5 +119,77 @@ int carregarTarefas(ListaDeTarefas *lt, char *arquivo){ /* Função para carrega
 
   fclose(fp);
 
+  return 0;
+}
+
+/*---------------------------------*/
+
+int alterarTarefas(ListaDeTarefas *lt){
+  if(lt->qtd == 0) {
+    printf("Não há tarefas para alterar.\n\n");
+    return 1;
+  }
+  int indice;
+  printf("Digite o número da tarefa a ser alterada: ");
+  scanf("%d", &indice);
+  while ((getchar()) != '\n');
+
+  if(indice < 0 || indice >= lt->qtd) {
+    printf("\nÍndice inválido.\n\n");
+    return 1;
+  }
+
+  printf("\nEscolha o campo a ser alterado:\n\n");
+  printf("1. Descrição\n");
+  printf("2. Prioridade\n");
+  printf("3. Categoria\n");
+  printf("4. Estado\n\n");
+
+  int opcao;
+  scanf("%d", &opcao);
+  while ((getchar()) != '\n');
+
+  switch(opcao) {
+    case 1:
+      printf("\nDigite a nova descrição da tarefa: ");
+      fgets(lt->tarefas[indice].descricao, 300, stdin);
+      lt->tarefas[indice].descricao[strcspn(lt->tarefas[indice].descricao, "\n")] = 0;
+      while ((getchar()) != '\n');
+      printf("\nDescrição alterada!\n\n");
+      break;
+    
+    case 2:
+      printf("Digite a nova prioridade da tarefa (Sugerimos definir valores de 0-10): ");
+      scanf("%d", &lt->tarefas[indice].prioridade);
+      while ((getchar()) != '\n');
+      printf("\nPrioridade alterada!\n\n");
+      break;
+    
+    case 3:
+      printf("Digite a nova categoria da tarefa: ");
+      fgets(lt->tarefas[indice].categoria, 100, stdin);
+      lt->tarefas[indice].categoria[strcspn(lt->tarefas[indice].categoria, "\n")] = 0;
+      while ((getchar()) != '\n');
+      printf("\nCategoria alterada!\n\n");
+      break;
+    
+    case 4:
+      printf("Digite o novo estado da tarefa (0 para completo, 1 para em andamento, 2 para não iniciado): ");
+      int estado;
+      scanf("%d", &estado);
+      while ((getchar()) != '\n');
+      if(estado < 0 || estado > 2) {
+        printf("\nEstado inválido!\n\n");
+        return 1;
+      }
+      lt->tarefas[indice].estado = estado;
+      printf("\nEstado alterado!\n\n");
+      break;
+    default:
+      printf("\nOpção inválida!\n\n");
+      return 1;
+  }
+
+  printf("\nTarefa alterada!\n\n\n");
   return 0;
 }

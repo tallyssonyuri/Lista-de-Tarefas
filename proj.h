@@ -1,11 +1,19 @@
 #ifndef PROJ_H
 #define PROJ_H
 
+typedef enum {
+  COMPLETO,
+  EM_ANDAMENTO,
+  NAO_INICIADO
+} Estado;
+
 typedef struct { /* Define uma estrutura para representar uma tarefa */
   char descricao[300]; /* Um array de tamanho 300 */
   int prioridade; /* Um inteiro */ 
   char categoria[100]; /* Um array de tamanho 100 */
-} Tarefa; /* Nome da estrutura */
+  Estado estado; 
+  char estadoStr[20]; /* Novo campo para armazenar o estado como uma string */
+} Tarefa;
 
 typedef struct { /* Define uma estrutura para representar uma lista de tarefas */
   Tarefa tarefas[100]; /* Um array de tamanho 100 */
@@ -20,5 +28,7 @@ int listarTarefas(ListaDeTarefas lt);
 void printMenu();
 int salvarTarefas(ListaDeTarefas *lt, char *arquivo);
 int carregarTarefas(ListaDeTarefas *lt, char *arquivo);
+
+int alterarTarefas(ListaDeTarefas *lt);
 
 #endif
