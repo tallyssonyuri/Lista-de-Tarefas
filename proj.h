@@ -31,4 +31,10 @@ int carregarTarefas(ListaDeTarefas *lt, char *arquivo);
 
 int alterarTarefas(ListaDeTarefas *lt);
 
+void filtrarTarefas(ListaDeTarefas lt);
+int filtrarTarefasPorPrioridade(ListaDeTarefas lt);
+int filtrarTarefasPorEstado(ListaDeTarefas lt);
+int filtrarTarefasPorCategoria(ListaDeTarefas lt);
+int filtrarTarefasPorPrioridadeECategoria(ListaDeTarefas lt);
+
 #endif
