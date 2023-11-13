@@ -37,4 +37,9 @@ int filtrarTarefasPorEstado(ListaDeTarefas lt);
 int filtrarTarefasPorCategoria(ListaDeTarefas lt);
 int filtrarTarefasPorPrioridadeECategoria(ListaDeTarefas lt);
 
+void exportarTarefas(ListaDeTarefas lt);
+int exportarTarefasPorPrioridade(ListaDeTarefas lt);
+int exportarTarefasPorCategoria(ListaDeTarefas lt);
+int exportarTarefasPorPrioridadeECategoria(ListaDeTarefas lt);
+
 #endif
